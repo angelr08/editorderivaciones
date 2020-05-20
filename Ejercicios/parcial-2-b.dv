@@ -1,0 +1,16 @@
+
+		<div class="desarrollo">
+			<div class="derivacion">
+				<div class="hipotesis iniciales">
+					<div class="premisa">
+						<div class="fila">1</div>
+						<span class="proposicion" data-fila="1">\forall x\left(T(a,x)\rightarrow G(x)\right)</span>
+						<span class="justificacion">H</span>
+					</div>
+				<div class="premisa"><span class="fila">2</span><span class="proposicion" data-fila="2">\forall x\forall yT(x,y)\rightarrow\left(\forall xG(x)\ \wedge\ \forall H(x)\right)</span><span class="justificacion">H</span></div><div class="premisa"><span class="fila">3</span><span class="proposicion" data-fila="3">\forall x\left(G(x)\rightarrow\forall yT(x,y)\right)</span><span class="justificacion">H</span></div></div>
+			<div class="premisa"><span class="fila">4</span><span class="proposicion" data-fila="4"></span><span class="justificacion"></span></div></div>
+			<div class="caja-conclusion">
+				<span class="conclusion">\therefore\exists x\neg H(x)\rightarrow\exists x\neg T(a,x)</span>
+			</div>
+		</div>
+	

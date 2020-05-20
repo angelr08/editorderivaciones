@@ -1,0 +1,16 @@
+
+		<div class="desarrollo">
+			<div class="derivacion">
+				<div class="hipotesis iniciales">
+					<div class="premisa">
+						<div class="fila">1</div>
+						<span class="proposicion" data-fila="1">\forall x\left(M(x)\rightarrow\neg S(x)\right)</span>
+						<span class="justificacion">H</span>
+					</div>
+				<div class="premisa"><span class="fila">2</span><span class="proposicion" data-fila="2">\forall x\left(\exists yP(x,y)\rightarrow S(x)\right)</span><span class="justificacion">H</span></div><div class="premisa"><span class="fila">3</span><span class="proposicion" data-fila="3">\forall x\left(H(x)\rightarrow\exists zP(x,z)\right)</span><span class="justificacion">H</span></div></div>
+			</div>
+			<div class="caja-conclusion">
+				<span class="conclusion">\therefore\forall x\left(M(x)\rightarrow\neg H(x)\right)</span>
+			</div>
+		</div>
+	

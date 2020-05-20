@@ -1,0 +1,16 @@
+
+		<div class="desarrollo">
+			<div class="derivacion">
+				<div class="hipotesis iniciales">
+					<div class="premisa">
+						<div class="fila">1</div>
+						<span class="proposicion" data-fila="1">\forall x\forall y\left(\left(S(y)\rightarrow\left(T(x,y)\vee H(x)\right)\right)\rightarrow\left(P(y)\rightarrow\left(R(x,y)\wedge S(y)\right)\right)\right)</span>
+						<span class="justificacion">H</span>
+					</div>
+				<div class="premisa"><span class="fila">2</span><span class="proposicion" data-fila="2">\forall x\forall y\left(\left(\neg H(x)\wedge\neg\left(R(x,y)\rightarrow T(x,y)\right)\right)\rightarrow\neg P(y)\right)</span><span class="justificacion">H</span></div></div>
+			<div class="premisa"><span class="fila">3</span><span class="proposicion" data-fila="3"></span><span class="justificacion"></span></div></div>
+			<div class="caja-conclusion">
+				<span class="conclusion">\therefore\forall x\forall y\left(P(y)\rightarrow\left(\left(R(x,y)\vee\neg S(y)\right)\rightarrow\left(P(y)\rightarrow S(y)\right)\right)\right)</span>
+			</div>
+		</div>
+	

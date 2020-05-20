@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Derivación - EDL 1.0.0</title>	
+	<link rel="stylesheet" type="text/css" href="lib/icons/flaticon.css"> 
+	<link rel="stylesheet" href="lib/mathquill/mathquill.css"/>
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="style-dark.css">	
+</head>
+<body>
+<div class="instrucciones" style="">
+	<button class="salir" onclick="cerrarInstrucciones()">x</button>
+	<div class="contenido">
+		<p>Instrucciones:</p>
+		<ul>
+			<li>Escribe usando el teclado en las cajas de texto enfocadas (borde azul)</li>
+			<li>Usa los botones de la parte inferior para ingresar símbolos o usa los atajos alt+1, alt+2, etc.</li>
+			<li>Usa los botones de la parte inferior para realizar acciones como: cerrar las premisas iniciales, añadir premisa, abrir subderivación, etc. o usa los atajos.</li>
+			<li>Usa la tecla tab para pasar a la caja de texto de justificación cuando hayas terminado de escribir tu linea.(Las Hipotesis traen la justificación H por defecto pero esta puede ser cambiada de ser necesario)</li>
+			<li>Pulsa enter al terminar la justificación para escribir una nueva linea.</li>
+			<li>Guarda tu progreso o abre una derivación haciendo clic en los botones de la parte inferior derecha (una vez guardado el archivo las lineas escritas hasta ese momento no podrán ser borradas al abrirlo en una siguiente ocasión, estas solo podrán ser editadas)</li>
+
+		</ul>
+	</div>
+</div>
+<section class="pantalla">
+	<div class="contenedor">
+		<div class="desarrollo">
+			<div class="derivacion">
+				<div class="hipotesis iniciales">
+					<div class="premisa">
+						<div class="fila">1</div>
+						<span  class="proposicion" data-fila="1"></span>
+						<span class="justificacion">H</span>
+					</div>
+				</div>
+			</div>
+			<div class="caja-conclusion">
+				<span class="conclusion">\therefore </span>
+			</div>
+		</div>
+	</div>
+	<div class="styles">
+		<a id="claro" class="color" href="#" style="display: none"><span>Claro</span></a>
+		<a id="oscuro"  class="color" href="#"><span>Oscuro</span></a>
+	</div>
+	<div class="buttons">
+		<div class="atajos">
+			<button class="btn simbolos" data-macro="\forall" data-shortcut="1">
+				<span class="shorcut-label">1</span>
+				<span class="macro" >\forall</span>
+			</button>
+			<button class="btn simbolos" data-macro="\exists" data-shortcut="2">
+				<span class="shorcut-label">2</span>
+				<span class="macro" >\exists</span>
+			</button>
+			<button class="btn simbolos" data-macro="\leftrightarrow" data-shortcut="3">
+				<span class="shorcut-label">3</span>
+				<span class="macro" >\leftrightarrow</span>
+			</button>
+			<button class="btn simbolos" data-macro="\rightarrow" data-shortcut="4">
+				<span class="shorcut-label">4</span>
+				<span class="macro" >\rightarrow</span>
+			</button>
+			<button class="btn simbolos" data-macro="\or" data-shortcut="5">
+				<span class="shorcut-label">5</span>
+				<span class="macro" >\or</span>
+			</button>
+			<button class="btn simbolos" data-macro="\and" data-shortcut="6">
+				<span class="shorcut-label">6</span>
+				<span class="macro" >\and</span>
+			</button>
+			<button class="btn simbolos" data-macro="\not" data-shortcut="7">
+				<span class="shorcut-label">7</span>
+				<span class="macro" >\not</span>
+			</button>
+			<button class="btn simbolos" data-macro="(" data-shortcut="8">
+				<span class="shorcut-label">8</span>
+				<span class="macro" >(</span>
+			</button>
+			<button class="btn simbolos" data-macro=")" data-shortcut="9">
+				<span class="shorcut-label">9</span>
+				<span class="macro" >)</span>
+			</button>
+		</div>
+		<div class="acciones">
+			<button class="btn accion" data-shortcut="" data-function="añadirPremisa">
+				<span class="shorcut-label">↵</span>
+				<span class="titulo" >Nueva premisa</span>
+			</button>
+			<button class="btn accion" data-shortcut="c" data-function="cerrarPremisasIniciales">
+				<span class="shorcut-label">c</span>
+				<span class="titulo" >Cerrar Hipotesis iniciales</span>
+			</button>
+			<button class="btn accion" data-shortcut="s" data-function="añadirSubderivacion">
+				<span class="shorcut-label">s</span>
+				<span class="titulo" >Abrir Subderivacion</span>
+			</button>
+			<button class="btn accion" data-shortcut="x" data-function="cerrarSubderivacion">
+				<span class="shorcut-label">d</span>
+				<span class="titulo" >Cerrar Subderivacion</span>
+			</button>
+			<button class="btn accion" data-shortcut="d" data-function="deleteLastRow">
+				<span class="shorcut-label">e</span>
+				<span class="titulo" >Eliminar ultima linea</span>
+			</button>
+			<button class="btn accion file" id="save" data-shortcut="" data-function="download">
+				<span class="titulo" ><i class="flaticon-save"></i></span>
+			</button>
+			<button class="btn accion file" id="open" data-shortcut="" data-function="open">
+				<span class="titulo" ><i class="flaticon-folder"></i></span>
+			</button>
+		</div>
+	</div>
+</section>
+<footer><span>*Atajos con alt + tecla</span><span style="float:right;"> Creado por Abel Pérez</span></footer>
+<input type="file" id="archivo" accept=".xml,.dv" style="display:none" onchange="handleFile(this.files)">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="lib/mathquill/mathquill.js"></script>
+<script>
+var MQ = MathQuill.getInterface(2);
+</script>
+<script>
+	var fileName = 'derivacion-'+ (Date.now() % 100000);
+	var LastRowCreated = 1;
+	var premisasIniciales = false;
+	var proposicionField = [];
+	var buttonField = [];
+	var justificacionField = [];
+	var conclusionField;
+	var abrirInput = document.getElementById("archivo");
+	var selectedBox;
+	var canDelete = false;
+	var canSave = true;
+	var contenedor = document.querySelector('.contenedor');
+
+	var memory = [{'contenedor' : contenedor.innerHTML, 'premisasIniciales' : premisasIniciales}];
+	var cursor = 0;
+
+	var botonClaro = document.getElementById('claro');
+	var botonOscuro = document.getElementById('oscuro');
+	
+	document.styleSheets[3].disabled = true;
+
+	botonOscuro.addEventListener('click', (e)=>{
+		e.preventDefault();
+		botonOscuro.style.display = "none";
+		botonClaro.style.display = "block";
+		document.styleSheets[3].disabled = false;
+	});
+
+	botonClaro.addEventListener('click', (e)=>{
+		e.preventDefault();
+		botonOscuro.style.display = "block";
+		botonClaro.style.display = "none";
+		document.styleSheets[3].disabled = true;
+	});
+
+	changeTitle(fileName);
+
+	function saveToMemory(){
+		if(canSave)
+		{	
+			canSave = false;
+			setTimeout(()=>
+			{
+				if (cursor < parseInt(parseInt(memory.length-1)))
+				{
+					memory = memory.slice(0,cursor+1);
+				}
+				let clone = contenedor.cloneNode(true);
+				let proposiciones = clone.querySelectorAll('.proposicion').forEach( (item,i)=>{
+					var fila = item.getAttribute('data-fila');
+					var latex = proposicionField[fila].latex();
+					item.setAttribute('class','proposicion');
+					item.innerHTML = latex;
+				});		
+
+				let justificaciones = clone.querySelectorAll('.justificacion').forEach( (item,i)=>{
+					var latex = justificacionField[i].latex();
+					item.setAttribute('class','justificacion');
+					item.innerHTML = latex;
+				});	
+
+				let latex = conclusionField.latex();
+				let conclusion = clone.querySelector('.conclusion');			
+					conclusion.setAttribute('class','conclusion');
+					conclusion.innerHTML = latex;
+				memory.push({'contenedor' : clone.innerHTML, 'premisasIniciales' : premisasIniciales});
+				cursor++;
+				console.log(cursor + ' de ' + parseInt(parseInt(memory.length-1)));
+				canSave = true;
+			}, 300);		
+		}	
+	}
+
+	function undo(){
+		if(cursor > 0)
+		{
+			cursor--;
+			contenedor.innerHTML = memory[cursor].contenedor;
+			premisasIniciales = memory[cursor].premisasIniciales;
+			console.log(cursor + ' de ' + parseInt(parseInt(memory.length-1)));
+			setFields();
+			setJustificaciones();
+			setConclusion();
+		}		
+	}
+
+	function redo(){
+		if(cursor < parseInt(memory.length-1))
+		{
+			cursor++;
+			contenedor.innerHTML = memory[cursor].contenedor;
+			premisasIniciales =  memory[cursor].premisasIniciales;
+			console.log(cursor + ' de ' + parseInt(parseInt(memory.length-1)));
+			setFields();
+			setJustificaciones();
+			setConclusion();
+		}	
+	}
+
+	function setConclusion(){
+		var conclusion = document.querySelector('.conclusion');
+		conclusionField = MQ.MathField(conclusion,{
+		  spaceBehavesLikeTab: false
+		});
+		conclusion.addEventListener('click', () => {
+			selectedBox = conclusionField;
+		});
+	}
+	setConclusion();
+
+	function setFields(){
+		proposicionField = [];
+		var proposiciones = document.querySelectorAll('.proposicion').forEach( (item,i)=>{
+			var fila = item.getAttribute('data-fila');
+			proposicionField[fila] = MQ.MathField(item,{
+			  spaceBehavesLikeTab: false
+			});
+			proposicionField[fila].reflow();
+			item.addEventListener('click', () => {
+				selectedBox = proposicionField[fila];
+				selectedBox.focus();
+				canDelete = (selectedBox.latex() == '') ? true : false;
+			});
+		});		
+		LastRowCreated = proposicionField.length-1;
+		selectedBox = proposicionField[LastRowCreated];
+		selectedBox.focus();
+	}setFields();
+
+	function deleteLastRow(){
+		document.querySelector('.derivacion').setAttribute('class','derivacion');
+
+		let lastPremise = document.querySelectorAll('.proposicion')[LastRowCreated-1].parentElement;
+
+		let previousSibling = lastPremise.previousElementSibling;
+
+		let parentElement = lastPremise.parentElement;
+
+		if(parentElement.getAttribute('class') == 'hipotesis')
+		{
+			parentElement.parentElement.remove();
+		}
+		else if(previousSibling)
+		{
+			if(previousSibling.getAttribute('class') == 'derivacion cerrada')
+			{
+				previousSibling.setAttribute('class', 'derivacion');
+			};
+			if (previousSibling.getAttribute('class') == 'hipotesis iniciales')
+			{
+				premisasIniciales = false;
+			}
+			lastPremise.remove();
+		}			
+		setFields();
+		setJustificaciones();
+		saveToMemory();
+	}
+	
+	function setButtons(){
+		var buttons = document.querySelectorAll('.macro').forEach( (item,i)=>{
+			var button = item.getAttribute('data-shortcut');	
+			buttonField[button] = MQ.StaticMath(item);
+		});
+	}
+	setButtons();
+
+
+	function setJustificaciones(){
+		var justificacion = document.querySelectorAll('.justificacion').forEach( (item,i)=>{
+			justificacionField[i] = MQ.MathField(item,{
+			  spaceBehavesLikeTab: false
+			});
+			item.addEventListener('click', () => {
+				selectedBox = justificacionField[i];
+				selectedBox.focus();
+			});
+		});
+	}
+	setJustificaciones();
+
+
+	function crearPremisa(j = ''){
+		var filaSpan = document.createElement('span');
+			filaSpan.setAttribute('class', 'fila');
+			filaSpan.textContent = LastRowCreated+1;
+			
+		var proposicionSpan = document.createElement('span')
+			proposicionSpan.setAttribute('class', 'proposicion');
+			proposicionSpan.setAttribute('data-fila',LastRowCreated+1);
+
+		var justificacionSpan = document.createElement('span');
+			justificacionSpan.setAttribute('class', 'justificacion');
+			justificacionSpan.textContent = j;
+
+		var premisa = document.createElement('div')
+			premisa.setAttribute('class', 'premisa');
+			premisa.appendChild(filaSpan);
+			premisa.appendChild(proposicionSpan);
+			premisa.appendChild(justificacionSpan);
+
+		saveToMemory();
+		
+		return premisa;
+	}
+
+	function añadirPremisa(){
+		if(premisasIniciales){
+			var derivaciones = document.querySelectorAll('.derivacion:not(.cerrada)');
+				derivaciones[derivaciones.length-1].appendChild(crearPremisa());
+		}else{
+			var hipotesis = document.querySelectorAll('.hipotesis');
+				hipotesis[hipotesis.length-1].appendChild(crearPremisa('H'));
+		}		
+		setFields();
+		setJustificaciones();
+		proposicionField[LastRowCreated].focus();
+	};
+
+	function añadirSubderivacion(){
+		premisasIniciales = true;
+		var hipotesis = document.createElement('div');
+			hipotesis.setAttribute('class','hipotesis');
+
+		var derivacion = document.createElement('div');
+			derivacion.setAttribute('class', 'derivacion');
+			derivacion.appendChild(hipotesis);
+
+		var derivaciones = document.querySelectorAll('.derivacion:not(.cerrada)');
+		let ultimaDerivacion = derivaciones[derivaciones.length-1];
+		let ultimoHijo = derivaciones[derivaciones.length-1].lastElementChild;
+		let penultimoHijo = ultimoHijo.previousElementSibling;
+		var hijoField = MQ(ultimoHijo.querySelector('.proposicion'));
+		console.log(hijoField.latex());
+		console.log(ultimoHijo.querySelector('.proposicion'));
+		console.log(ultimoHijo.previousElementSibling);
+
+		//arreglar esto
+		if ( (penultimoHijo && penultimoHijo.getAttribute('class') == 'derivacion') || (hijoField && hijoField.latex() != "") || !penultimoHijo)
+		{
+			ultimaDerivacion.appendChild(derivacion);
+		}else if (hijoField && hijoField.latex() == "")
+		{
+			LastRowCreated--;
+			ultimoHijo.replaceWith(derivacion);
+		}else{
+			ultimaDerivacion.appendChild(derivacion);
+		}
+		saveToMemory();	
+		añadirHipotesis();
+	};
+
+	function cerrarSubderivacion(){
+		var derivaciones = document.querySelectorAll('.derivacion:not(.cerrada)');
+			derivaciones[derivaciones.length-1].setAttribute('class', 'derivacion cerrada');
+		añadirPremisa();
+	}
+	
+	function añadirHipotesis(){
+		var hipotesis = document.querySelectorAll('.hipotesis');
+			hipotesis[hipotesis.length-1].appendChild(crearPremisa('H'));
+
+		setFields();
+		setJustificaciones();
+		proposicionField[LastRowCreated].focus();
+	};
+
+	function cerrarPremisasIniciales(){
+		premisasIniciales = true;
+		var derivaciones = document.querySelectorAll('.derivacion:not(.cerrada)');			
+			derivaciones[derivaciones.length-1].appendChild(crearPremisa());
+		setFields();
+		setJustificaciones();
+		proposicionField[LastRowCreated].focus();
+	}
+
+	contenedor.onkeypress = (e) => {
+		if(!e.ctrlKey && e.keyCode != 13){
+			saveToMemory();
+		}
+		//console.log(e);
+	};
+
+	document.onkeydown = (e) => {
+
+		var key = parseInt(e.key); 
+
+		if(e.keyCode == 13){
+			añadirPremisa();			
+		}
+
+		if (proposicionField[LastRowCreated] == selectedBox && selectedBox.latex() == "") {
+			if (e.keyCode == 8){
+				if (canDelete) {
+					deleteLastRow();
+					canDelete = false;
+				}else{
+					setTimeout(() => {canDelete = true}, 300);
+				}
+			}else{
+				canDelete = false;
+			}			
+		}
+
+		if (e.keyCode == 8 || e.keyCode == 46){
+			saveToMemory();
+		}
+
+		if(e.ctrlKey){
+			if (e.keyCode == 90){
+				undo();	
+			}
+			if (e.keyCode == 89){
+				redo();	
+			}
+			if (e.keyCode == 86 || e.keyCode == 88){
+				saveToMemory();
+			}
+		}
+
+		if(e.altKey){
+			e.preventDefault();
+			if (key >= 1 && key <= 9){
+				selectedBox.write(botones[key-1].getAttribute('data-macro'));
+				selectedBox.focus();
+			}
+			if (e.keyCode == 67){
+				cerrarPremisasIniciales();	
+			}
+			if (e.keyCode == 83){
+				añadirSubderivacion();
+			}
+			if (e.keyCode == 68){
+				cerrarSubderivacion();
+			}
+			if (e.keyCode == 69) {
+				saveToMemory();
+				deleteLastRow();
+			}
+		}
+	}
+
+	var botones = document.querySelectorAll('.btn.simbolos');
+	botones.forEach((item,i)=>{
+		item.addEventListener('click', () => {
+			saveToMemory();
+			selectedBox.write(item.getAttribute('data-macro'));
+			selectedBox.focus();
+		});
+	});	
+
+	var acciones = document.querySelectorAll('.btn.accion').forEach((item,i)=>{
+		item.addEventListener('click', () => {
+			window[item.getAttribute('data-function')]();
+		});
+	});
+
+	function changeTitle(title){
+		document.title = title + " - EDL 1.0.0";
+	}
+
+	function download() {
+
+		let clone = contenedor.cloneNode(true);
+		let proposiciones = clone.querySelectorAll('.proposicion').forEach( (item,i)=>{
+			var fila = item.getAttribute('data-fila');
+			var latex = proposicionField[fila].latex();
+			item.setAttribute('class','proposicion');
+			item.innerHTML = latex;
+		});		
+
+		let justificaciones = clone.querySelectorAll('.justificacion').forEach( (item,i)=>{
+			var latex = justificacionField[i].latex();
+			item.setAttribute('class','justificacion');
+			item.innerHTML = latex;
+		});	
+
+		let latex = conclusionField.latex();
+		let conclusion = clone.querySelector('.conclusion');			
+			conclusion.setAttribute('class','conclusion');
+			conclusion.innerHTML = latex;
+
+	    var file = new Blob([clone.innerHTML], {type: 'text/plain'});
+	    if (window.navigator.msSaveOrOpenBlob) // IE10+
+	        window.navigator.msSaveOrOpenBlob(file, fileName + '.dv');
+	    else { // Others
+	    	let url = URL.createObjectURL(file);
+	        let a = document.createElement("a");	        
+	        	a.href = url;
+	        	a.download = fileName + '.dv';
+		        document.body.appendChild(a);
+		        a.click();
+		        setTimeout(function() {
+		            document.body.removeChild(a);
+		            window.URL.revokeObjectURL(url);  
+		        }, 0); 
+	    }
+	}
+	function open(){
+		if (abrirInput) {
+    		abrirInput.click();
+  		}
+	}
+	function handleFile(file){
+		var reader = new FileReader();
+   		reader.readAsText(file[0], "UTF-8");
+   		reader.onload = function (e) {
+   			changeTitle(file[0].name.split('.')[0]);
+	        contenedor.innerHTML = e.target.result;
+	        premisasIniciales = (document.querySelectorAll('.hipotesis')[0].nextElementSibling) ? true : false;
+	        setFields();
+			setJustificaciones();
+			setConclusion();
+			saveToMemory();
+	    }
+	    reader.onerror = function (e) {
+	        alert("Error leyendo el archivo");
+	    }
+	}
+
+	function cerrarInstrucciones(){
+		document.querySelector('.instrucciones').style.display = 'none';
+		selectedBox.focus();
+	}
+
+</script>
+</body>
+</html>

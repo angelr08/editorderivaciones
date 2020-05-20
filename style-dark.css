@@ -1,0 +1,61 @@
+body {
+    background: #191b1f;
+    color: #fff;
+}
+
+.fila {
+    color: #fff896;
+}
+
+.mq-editable-field .mq-cursor {
+  border-left: 1px solid white;
+}
+
+.proposicion * {
+    font-size: 1em;
+}
+
+.buttons {
+    background: #1e222b;
+}
+
+button.btn {
+    color: #fff;
+    background: #353844;
+    border-color: #262829;
+    border: none;
+}
+
+button#save {
+    background: #115b88;
+}
+
+button#open {
+    background: #299049;
+}
+
+.instrucciones {
+    background: #1f2225;
+    color: #c5c9ce;
+}
+
+footer {
+    background: hsla(222, 18%, 13%, 1);
+}
+
+button.btn:hover {
+    background: #104261;
+}
+
+button.btn:active {
+    background: #18689a;
+}
+
+button#save:hover {
+    background: #0666a0;
+}
+
+button#open:hover {
+    background: #23ad4e;
+}
+
